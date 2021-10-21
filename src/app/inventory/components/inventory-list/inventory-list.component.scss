@@ -1,0 +1,21 @@
+section {
+    display: flex;
+
+    justify-content: center;
+    > div {
+        width: 75%;
+    }
+    .mat-toolbar {
+        display: flex;
+        justify-content: space-between;
+    }
+    table {
+        width: 100%;
+        a{
+            text-decoration: none;
+            color: #673ab7;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    }
+}

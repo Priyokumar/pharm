@@ -1,0 +1,47 @@
+<section>
+  <div class="heading">
+    <h3>Add Inventory</h3>
+  </div>
+  <br>
+  <div class="container">
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Medicine</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let medicine of medicines" [value]="medicine.id">
+            {{medicine.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Cost price</mat-label>
+        <input type="number" matInput placeholder="Ex. 25" #input>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Selling price</mat-label>
+        <input type="number" matInput placeholder="Ex. 30" #input>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Available stock</mat-label>
+        <input type="number" matInput placeholder="Ex. 500" #input>
+      </mat-form-field>
+    </div>
+    <div>
+      <div class="radio-label">Expired?</div>
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="true">Yes</mat-radio-button>&nbsp;&nbsp;
+        <mat-radio-button value="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="footer">
+      <button mat-raised-button color="primary" (click)="dialogRef.close()">Add Medicine</button>
+    </div>
+  </div>
+</section>

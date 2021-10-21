@@ -1,0 +1,17 @@
+<section>
+  <div class="heading">
+    <h3>Add Medicine Type</h3>
+  </div>
+  <br>
+  <div class="container">
+    <div>
+      <mat-form-field appearance="standard">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Ex. Vitamin" #input [formControl]="name">
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="add()" [disabled]="!name.valid">Add Type</button>
+    </div>
+  </div>
+</section>

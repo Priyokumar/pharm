@@ -1,0 +1,18 @@
+section{
+  display: flex;
+  justify-content: center;
+  .mat-tab-group{
+    width: 70%;
+  }
+  ::ng-deep.mat-tab-label{
+    color: #000000;
+    font-size: 14px;
+    height: 35px;
+    min-width: 50px !important;
+    padding: 0 15px !important;
+
+  }
+  ::ng-deep.mat-tab-body-wrapper{
+    margin: 15px;
+  }
+}

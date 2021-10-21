@@ -1,0 +1,13 @@
+section {
+    table {
+        width: 100%;
+    }
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        button {
+            height: fit-content;
+        }
+    }
+}

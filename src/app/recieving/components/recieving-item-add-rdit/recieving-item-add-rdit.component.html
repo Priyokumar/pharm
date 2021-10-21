@@ -1,0 +1,48 @@
+<section>
+  <div class="heading">
+    <h3>Add Inventory</h3>
+  </div>
+  <br>
+  <div class="flex-column">
+    <mat-form-field appearance="standard">
+      <mat-label>Medicine</mat-label>
+      <mat-select [formControl]="medicine">
+        <mat-option *ngFor="let medicine of medicines" [value]="medicine.id">
+          {{medicine.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Batch Number</mat-label>
+      <input type="text" matInput placeholder="Ex. D5866FR" #input  [formControl]="batchNumber">
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Manufactured Date</mat-label>
+      <input matInput [matDatepicker]="mfgpicker"  [formControl]="mfgDate">
+      <mat-datepicker-toggle matSuffix [for]="mfgpicker"></mat-datepicker-toggle>
+      <mat-datepicker #mfgpicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Expiry Date</mat-label>
+      <input matInput [matDatepicker]="picker"  [formControl]="expiryDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Cost Price</mat-label>
+      <input type="number" matInput placeholder="Ex. 20" #input  [formControl]="costPrice">
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Selling Price</mat-label>
+      <input type="number" matInput placeholder="Ex. 20" #input  [formControl]="sellingPrice">
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Quantity</mat-label>
+      <input type="number" matInput placeholder="Ex. 20" #input  [formControl]="quantity">
+    </mat-form-field>
+
+    <div class="footer">
+      <button mat-raised-button color="primary" class="w-100" (click)="addItem()" [disabled]="!fg.valid">Add Medicine</button>
+    </div>
+  </div>
+</section>

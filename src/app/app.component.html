@@ -1,0 +1,44 @@
+<main>
+  <header>
+    <mat-toolbar color="primary">
+      <button mat-button class="example-icon" aria-label="Banner">
+        <mat-icon>track_changes</mat-icon>&nbsp;
+        <span>Molecule Pharmacy</span>
+      </button>
+      <span class="spacer"></span>
+      <button mat-button class="example-icon" aria-label="Dashboard" [routerLink]="['/dashboard']" routerLinkActive="router-link-active" >
+        <span>Dashboard</span>
+      </button>
+      <button mat-button class="" aria-label="Sale" [routerLink]="['/sales']" routerLinkActive="router-link-active">
+        <span>Sales</span>
+      </button>
+      <button mat-button class="" aria-label="Medicine"  [routerLink]="['/inventory']" routerLinkActive="router-link-active">
+        <span>Inventory</span>
+      </button>
+      <button mat-button class="" aria-label="Supplier"  [routerLink]="['/supplier']" routerLinkActive="router-link-active">
+        <span>Supplier</span>
+      </button>
+      <button mat-button class="" aria-label="Recieving"  [routerLink]="['/recieving']" routerLinkActive="router-link-active">
+        <span>Recieving</span>
+      </button>
+      <button mat-button class="" aria-label="Medicine"  [routerLink]="['/medicines']" routerLinkActive="router-link-active">
+        <span>Medicine</span>
+      </button>
+      <button mat-button class="" aria-label="Report" [routerLink]="['/reports']" routerLinkActive="router-link-active">
+        <span>Report</span>
+      </button>
+      <span class="spacer"></span>
+      <div>
+        <button mat-button class="" aria-label="User Profile">
+          <span>Molecule Nongthombam</span>
+        </button>
+        <button mat-icon-button class="" aria-label="User Profile">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+  </header>
+  <section>
+    <router-outlet></router-outlet>
+  </section>
+</main>
