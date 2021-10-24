@@ -7,12 +7,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { RecievingItemAddRditComponent } from './components/recieving-item-add-rdit/recieving-item-add-rdit.component';
+import { LoginGuardService } from '../auth/services/login-guard.service';
+import { StringToDatePipe } from '../string-to-date.pipe';
 
 const routes: Routes = [
-  { path: "", component: RecievingListComponent },
-  { path: "add", component: RecievingAddEditComponent },
-  { path: ":id/edit", component: RecievingAddEditComponent },
-  { path: ":id/view", component: RecievingViewComponent }
+  { path: "", component: RecievingListComponent, canActivate:[LoginGuardService] },
+  { path: "add", component: RecievingAddEditComponent, canActivate:[LoginGuardService] },
+  { path: ":id/edit", component: RecievingAddEditComponent, canActivate:[LoginGuardService] },
+  { path: ":id/view", component: RecievingViewComponent, canActivate:[LoginGuardService] }
 ];
 
 @NgModule({
@@ -27,7 +29,8 @@ const routes: Routes = [
     RecievingListComponent,
     RecievingViewComponent,
     RecievingAddEditComponent,
-    RecievingItemAddRditComponent
+    RecievingItemAddRditComponent,
+    StringToDatePipe
   ]
 })
 export class RecievingModule { }

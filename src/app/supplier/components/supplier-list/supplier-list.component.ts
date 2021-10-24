@@ -1,21 +1,28 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { IInventory, ISupplier } from 'src/app/model';
+import { Subscription } from 'rxjs';
+import { ISupplier } from 'src/app/model';
 import { SupplierService } from '../../services/supplier.service';
 import { SupplierAddEditComponent } from '../supplier-add-edit/supplier-add-edit.component';
 
 @Component({
   selector: 'app-supplier-list',
   templateUrl: './supplier-list.component.html',
-  styleUrls: ['./supplier-list.component.scss']
+  styleUrls: ['./supplier-list.component.scss'],
 })
-export class SupplierListComponent implements OnInit {
-
+export class SupplierListComponent implements OnInit, OnDestroy {
   data: ISupplier[] = [];
-  displayedColumns: string[] = ['name', 'address', 'contactPerson', 'contactNumber', 'isActive', 'action'];
+  displayedColumns: string[] = [
+    'name',
+    'address',
+    'contactPerson',
+    'contactNumber',
+    'isActive',
+    'action',
+  ];
   dataSource!: MatTableDataSource<ISupplier>;
 
   @ViewChild(MatPaginator)
@@ -23,22 +30,36 @@ export class SupplierListComponent implements OnInit {
 
   @ViewChild(MatSort)
   sort!: MatSort;
+  suppliersubscription: Subscription;
 
-  constructor(private dialog: MatDialog, private supplierService: SupplierService) { }
+  constructor(
+    private dialog: MatDialog,
+    private supplierService: SupplierService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
-    setTimeout(()=>{
+    setTimeout(() => {
       this.getSuppliers();
-    }, 0)
+    }, 0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.suppliersubscription) this.suppliersubscription.unsubscribe();
   }
 
   getSuppliers() {
-    this.data = this.supplierService.getSuppliers();
-    this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.paginator = this.paginator;
+    this.suppliersubscription = this.supplierService.getSuppliers().subscribe(
+      (data) => {
+        this.data = data;
+        this.dataSource = new MatTableDataSource(this.data);
+        this.dataSource.paginator = this.paginator;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   applyFilter(event: Event) {
@@ -51,23 +72,36 @@ export class SupplierListComponent implements OnInit {
   }
 
   addSupplier() {
-    this.dialog.open(SupplierAddEditComponent, { width: "35%" }).afterClosed().subscribe(
-      data => {
+    this.dialog
+      .open(SupplierAddEditComponent, { width: '35%' })
+      .afterClosed()
+      .subscribe((data) => {
         if (data) {
           this.getSuppliers();
         }
-      }
-    )
+      });
   }
 
   editSupplier(supplier: ISupplier) {
     console.log(supplier);
-    this.dialog.open(SupplierAddEditComponent, { data: supplier, width: "35%" }).afterClosed().subscribe(
-      data => {
+    this.dialog
+      .open(SupplierAddEditComponent, { data: supplier, width: '35%' })
+      .afterClosed()
+      .subscribe((data) => {
         if (data) {
           this.getSuppliers();
         }
-      }
-    )
+      });
+  }
+
+  remove(data: ISupplier) {
+    this.supplierService
+      .removeSupplier(data.id)
+      .then((_) => {
+        this.getSuppliers();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }

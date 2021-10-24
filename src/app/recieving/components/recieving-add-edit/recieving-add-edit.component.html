@@ -63,7 +63,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
         </div>
-        <button mat-raised-button color="primary" (click)="save()" class="save" [disabled]="!fg.valid || items.length <= 0">Save Recieving</button>
+        <button mat-raised-button color="primary" (click)="save()" class="save" [disabled]="!fg.valid || items.length <= 0 || inProgress">Save Recieving</button>
       </div>
       <div></div>
   </div>

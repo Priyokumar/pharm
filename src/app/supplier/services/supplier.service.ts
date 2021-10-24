@@ -1,44 +1,42 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ISupplier } from 'src/app/model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupplierService {
+  collection = environment.collection.Suppliers;
+  constructor(private firestore: AngularFirestore) {}
 
-  constructor() { }
-
-  getSuppliers():ISupplier[] {
-    const data = localStorage.getItem("suppliers");
-    if (!data) return [];
-    return JSON.parse(data);
+  getSuppliers(): Observable<ISupplier[]> {
+    return this.firestore
+      .collection(this.collection)
+      .snapshotChanges()
+      .pipe(
+        map((data) => {
+          if (!data || data.length <= 0) return [];
+          return data.map((ele) => {
+            const d: ISupplier = ele.payload.doc.data() as any;
+            d.id = ele.payload.doc.id;
+            return d;
+          });
+        })
+      );
   }
 
-  addSupplier(data: ISupplier):void {
-    const existingData = localStorage.getItem("suppliers");
-    if (!existingData) {
-      const d:ISupplier[] = [data];
-      localStorage.setItem("suppliers", JSON.stringify(d));
-    };
-    const d:ISupplier[] = JSON.parse(existingData);
-    d.push(data);
-    localStorage.setItem("suppliers", JSON.stringify(d));
+  addSupplier(data: ISupplier): Promise<DocumentReference<unknown>> {
+    return this.firestore.collection(this.collection).add(data);
   }
 
-  updateSupplier(data: ISupplier, id: string):void {
-    const existingData = localStorage.getItem("suppliers");
-    const d:ISupplier[] = JSON.parse(existingData);
-    const i = d.findIndex(ele=>ele.id === id);
-    d[i] = data;
-    localStorage.setItem("suppliers", JSON.stringify(d));
+  updateSupplier(data: ISupplier, id: string): Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).set(data);
   }
 
-  removeSupplier(id: string):void {
-    const existingData = localStorage.getItem("suppliers");
-    const d:ISupplier[] = JSON.parse(existingData);
-    const i = d.findIndex(ele=>ele.id === id);
-    d.splice(i,1);
-    localStorage.setItem("suppliers", JSON.stringify(d));
+  removeSupplier(id: string): Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).delete();
   }
-
 }

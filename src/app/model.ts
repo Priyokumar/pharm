@@ -1,5 +1,5 @@
 export interface IMedicineType {
-    id: string;
+    id?: string;
     name: string;
 }
 
@@ -21,9 +21,8 @@ export interface IInventory {
     medicine: IMedicine;
     sellingPrice: number;
     costPrice: number;
-    stockAvailable: number;
     isExpired: boolean;
-    batches: IBatch[];
+    batch: IBatch;
 }
 
 export interface IBatch {
@@ -46,7 +45,7 @@ export interface ISupplier {
 export interface IRecieving {
     id: string;
     supplier: ISupplier;
-    recievedDate: Date;
+    recievedDate: string;
     items: IRecievingItem[];
     recievedBy: string;
 }

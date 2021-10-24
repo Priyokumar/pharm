@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { IMedicineCategory, IMedicineType } from '../../../model';
 import { MedicineCategoryService } from '../../services/medicine-category.service';
 import { MedicineCategoryAddComponent } from '../medicine-category-add/medicine-category-add.component';
@@ -13,7 +14,7 @@ import { MedicineTypeAddComponent } from '../medicine-type-add/medicine-type-add
   templateUrl: './medicine-category-list.component.html',
   styleUrls: ['./medicine-category-list.component.scss']
 })
-export class MedicineCategoryListComponent implements OnInit {
+export class MedicineCategoryListComponent implements OnInit, OnDestroy {
 
   data: IMedicineCategory[] = [];
 
@@ -25,12 +26,30 @@ export class MedicineCategoryListComponent implements OnInit {
 
   @ViewChild(MatSort)
   sort!: MatSort;
+  getSubscription: Subscription;
 
   constructor(private dialog: MatDialog,private medicineCategoryService:MedicineCategoryService) { }
 
   ngOnInit() {
-    this.data = this.medicineCategoryService.getMedicineCategories();
-    this.dataSource = new MatTableDataSource(this.data);
+    this.getMedicineCategories();
+  }
+
+  ngOnDestroy(): void {
+    if(this.getSubscription) this.getSubscription.unsubscribe();
+  }
+
+  getMedicineCategories() {
+    this.getSubscription = this.medicineCategoryService
+      .getMedicineCategories()
+      .subscribe(
+        (data) => {
+          this.data = data;
+          this.dataSource = new MatTableDataSource(this.data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   applyFilter(event: Event) {
@@ -45,14 +64,17 @@ export class MedicineCategoryListComponent implements OnInit {
   addCategory() {
     this.dialog.open(MedicineCategoryAddComponent).afterClosed().subscribe(data=>{
       if(data){
-        this.ngOnInit();
+        this.getMedicineCategories();
       }
     });
   }
 
   remove(data: IMedicineCategory){
-    this.medicineCategoryService.removeMedicineCategory(data.id);
-    this.ngOnInit();
+    this.medicineCategoryService.removeMedicineCategory(data.id).then(_=>{
+      this.getMedicineCategories();
+    }).catch(err=>{
+      console.log(err);
+    });
   }
 
 }

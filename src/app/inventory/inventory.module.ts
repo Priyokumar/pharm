@@ -5,10 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { InventoryAddEditComponent } from './components/inventory-add-edit/inventory-add-edit.component';
+import { LoginGuardService } from '../auth/services/login-guard.service';
 
 const routes: Routes = [
   {
-    path: "", component: InventoryListComponent
+    path: "", component: InventoryListComponent, canActivate:[LoginGuardService]
   }
 ];
 

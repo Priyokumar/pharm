@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "pharm-f0874": {
+      "hosting": {
+        "pharm": [
+          "pharm-f0874"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "pharm-f0874"
+  }
+}

@@ -1,0 +1,20 @@
+<section class="flex jc-center ai-center">
+  <div class="login-container mat-elevation-z1">
+    <div class="title flex jc-center "><span>Login</span></div>
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput placeholder="abcd@abc.com" #input [formControl]="email">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="standard" class="w-100">
+        <mat-label>Password</mat-label>
+        <input type="text" matInput placeholder="***************" #input [formControl]="password">
+      </mat-form-field>
+    </div>
+    <div class="action">
+      <button mat-raised-button color="primary" (click)="login()" class="w-100" [disabled]="!fg.valid">Login</button>
+    </div>
+  </div>
+</section>

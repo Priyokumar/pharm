@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { IMedicine, IMedicineCategory, IMedicineType } from '../../../model';
 import { MedicineCategoryService } from '../../services/medicine-category.service';
 import { MedicineTypeService } from '../../services/medicine-type.service';
@@ -9,18 +10,20 @@ import { MedicineService } from '../../services/medicine.service';
 @Component({
   selector: 'app-medicine-add-edit',
   templateUrl: './medicine-add-edit.component.html',
-  styleUrls: ['./medicine-add-edit.component.scss']
+  styleUrls: ['./medicine-add-edit.component.scss'],
 })
-export class MedicineAddEditComponent implements OnInit {
-
+export class MedicineAddEditComponent implements OnInit, OnDestroy {
   categories: IMedicineCategory[] = [];
   types: IMedicineType[] = [];
 
-  fg: FormGroup
+  fg: FormGroup;
   name = new FormControl('', Validators.required);
   description = new FormControl('', null);
   category = new FormControl('', Validators.required);
   type = new FormControl('', Validators.required);
+  typesSubscription: Subscription;
+  categoriesSubscription: Subscription;
+  inProgress = false;
 
   constructor(
     public dialogRef: MatDialogRef<MedicineAddEditComponent>,
@@ -33,12 +36,16 @@ export class MedicineAddEditComponent implements OnInit {
       name: this.name,
       description: this.description,
       category: this.category,
-      type: this.type
+      type: this.type,
     });
 
-    if(this.data){
+    if (this.data) {
       this.setForm();
     }
+  }
+  ngOnDestroy(): void {
+    if (this.typesSubscription) this.typesSubscription.unsubscribe();
+    if (this.categoriesSubscription) this.categoriesSubscription.unsubscribe();
   }
   setForm() {
     this.name.setValue(this.data.name);
@@ -53,14 +60,33 @@ export class MedicineAddEditComponent implements OnInit {
   }
 
   getTypes() {
-    this.types = this.medicinrTypeService.getMedicineTypes();
+    this.typesSubscription = this.medicinrTypeService
+      .getMedicineTypes()
+      .subscribe(
+        (data) => {
+          this.types = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   getCategories() {
-    this.categories = this.medicineCategoryService.getMedicineCategories();
+    this.categoriesSubscription = this.medicineCategoryService
+      .getMedicineCategories()
+      .subscribe(
+        (data) => {
+          this.categories = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   addEdit() {
+    this.inProgress = true;
     const payload: IMedicine = this.fg.value;
     if (this.data) {
       payload.id = '' + this.data.id;
@@ -69,8 +95,6 @@ export class MedicineAddEditComponent implements OnInit {
       payload.id = '' + new Date().getTime();
       this.medicineService.addMedicine(payload);
     }
-    this.dialogRef.close("ok");
+    this.dialogRef.close('ok');
   }
-
-
 }

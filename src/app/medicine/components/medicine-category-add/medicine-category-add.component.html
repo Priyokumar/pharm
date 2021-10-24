@@ -11,7 +11,7 @@
       </mat-form-field>
     </div>
     <div>
-      <button mat-raised-button color="primary" (click)="add()" [disabled]="!name.valid">Add Category</button>
+      <button mat-raised-button color="primary" (click)="add()" [disabled]="!name.valid || inProgress">Add Category</button>
     </div>
   </div>
 </section>

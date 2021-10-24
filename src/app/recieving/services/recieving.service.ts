@@ -1,42 +1,38 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IRecieving } from 'src/app/model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecievingService {
-  constructor() {}
+  collection = environment.collection.Recievings;
+  constructor(private firestore: AngularFirestore) {}
 
-  getRecievings(): IRecieving[] {
-    const data = localStorage.getItem('recievings');
-    if (!data) return [];
-    return JSON.parse(data);
+  getRecievings(): Observable<IRecieving[]> {
+    return this.firestore
+      .collection(this.collection)
+      .snapshotChanges()
+      .pipe(
+        map((data) => {
+          if (!data || data.length <= 0) return [];
+          return data.map((ele) => {
+            const d: IRecieving = ele.payload.doc.data() as any;
+            d.id = ele.payload.doc.id;
+            return d;
+          });
+        })
+      );
   }
 
-  addRecieving(data: IRecieving): void {
-    const existingData = localStorage.getItem('recievings');
-    if (!existingData) {
-      const d: IRecieving[] = [data];
-      localStorage.setItem('recievings', JSON.stringify(d));
-    }
-    const d: IRecieving[] = JSON.parse(existingData);
-    d.push(data);
-    localStorage.setItem('recievings', JSON.stringify(d));
+  addRecieving(data: IRecieving): Promise<DocumentReference<unknown>> {
+    return this.firestore.collection(this.collection).add(data);
   }
 
-  updateRecieving(data: IRecieving, id: string): void {
-    const existingData = localStorage.getItem('recievings');
-    const d: IRecieving[] = JSON.parse(existingData);
-    const i = d.findIndex((ele) => ele.id === id);
-    d[i] = data;
-    localStorage.setItem('recievings', JSON.stringify(d));
-  }
-
-  removeRecieving(id: string): void {
-    const existingData = localStorage.getItem('recievings');
-    const d: IRecieving[] = JSON.parse(existingData);
-    const i = d.findIndex((ele) => ele.id === id);
-    d.splice(i, 1);
-    localStorage.setItem('recievings', JSON.stringify(d));
+  removeRecieving(id: string):  Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).delete();
   }
 }

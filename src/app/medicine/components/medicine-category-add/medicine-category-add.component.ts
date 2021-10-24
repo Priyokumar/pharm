@@ -3,31 +3,39 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { IMedicineCategory } from 'src/app/model';
 import { MedicineCategoryService } from '../../services/medicine-category.service';
-import { MedicineTypeService } from '../../services/medicine-type.service';
 
 @Component({
   selector: 'app-medicine-category-add',
   templateUrl: './medicine-category-add.component.html',
-  styleUrls: ['./medicine-category-add.component.scss']
+  styleUrls: ['./medicine-category-add.component.scss'],
 })
 export class MedicineCategoryAddComponent implements OnInit {
-
   name = new FormControl('', Validators.required);
+  inProgress = false;
 
   constructor(
     public dialogRef: MatDialogRef<MedicineCategoryAddComponent>,
     private medicineCategoryService: MedicineCategoryService
-  ) { }
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   add() {
+    this.inProgress = true;
     const data: IMedicineCategory = {
       id: '' + new Date().getTime(),
-      name: this.name.value
-    }
-    this.medicineCategoryService.addMedicineCategory(data);
-    this.dialogRef.close(data);
+      name: this.name.value,
+    };
+    this.medicineCategoryService
+      .addMedicineCategory(data)
+      .then((data) => {
+        this.inProgress = false;
+        console.log('Data added', data);
+        this.dialogRef.close(data);
+      })
+      .catch((err) => {
+        this.inProgress = false;
+        console.log(err);
+      });
   }
 }

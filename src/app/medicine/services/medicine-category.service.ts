@@ -1,36 +1,38 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IMedicineCategory } from 'src/app/model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MedicineCategoryService {
+  collection = environment.collection.MedicineCategories;
+  constructor(private firestore: AngularFirestore) {}
 
-constructor() { }
+  getMedicineCategories(): Observable<IMedicineCategory[]> {
+    return this.firestore
+      .collection(this.collection)
+      .snapshotChanges()
+      .pipe(
+        map((data) => {
+          if (!data || data.length <= 0) return [];
+          return data.map((ele) => {
+            const d: IMedicineCategory = ele.payload.doc.data() as any;
+            d.id = ele.payload.doc.id;
+            return d;
+          });
+        })
+      );
+  }
 
-getMedicineCategories():IMedicineCategory[] {
-  const data = localStorage.getItem("medicineCategories");
-  if (!data) return [];
-  return JSON.parse(data);
-}
+  addMedicineCategory(data: IMedicineCategory): Promise<DocumentReference<unknown>>  {
+    return this.firestore.collection(this.collection).add(data);
+  }
 
-addMedicineCategory(data: IMedicineCategory):void {
-  const existingData = localStorage.getItem("medicineCategories");
-  if (!existingData) {
-    const d:IMedicineCategory[] = [data];
-    localStorage.setItem("medicineCategories", JSON.stringify(d));
-  };
-  const d:IMedicineCategory[] = JSON.parse(existingData);
-  d.push(data);
-  localStorage.setItem("medicineCategories", JSON.stringify(d));
-}
-
-removeMedicineCategory(id: string):void {
-  const existingData = localStorage.getItem("medicineCategories");
-  const d:IMedicineCategory[] = JSON.parse(existingData);
-  const i = d.findIndex(ele=>ele.id === id);
-  d.splice(i,1);
-  localStorage.setItem("medicineCategories", JSON.stringify(d));
-}
-
+  removeMedicineCategory(id: string): Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).delete();
+  }
 }

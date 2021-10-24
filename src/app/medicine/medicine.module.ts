@@ -10,9 +10,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MedicineCategoryAddComponent } from './components/medicine-category-add/medicine-category-add.component';
 import { MedicineTypeAddComponent } from './components/medicine-type-add/medicine-type-add.component';
 import { MedicineAddEditComponent } from './components/medicine-add-edit/medicine-add-edit.component';
+import { LoginGuardService } from '../auth/services/login-guard.service';
 
 const routes: Routes = [
-  { path: "", component: MedicineComponent }
+  { path: "", component: MedicineComponent, canActivate:[LoginGuardService] }
 ];
 
 @NgModule({

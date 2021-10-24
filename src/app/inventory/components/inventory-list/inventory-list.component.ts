@@ -1,75 +1,36 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { IInventory } from 'src/app/model';
+import { InventoryService } from '../../services/inventory.service';
 import { InventoryAddEditComponent } from '../inventory-add-edit/inventory-add-edit.component';
 
 @Component({
   selector: 'app-inventory-list',
   templateUrl: './inventory-list.component.html',
-  styleUrls: ['./inventory-list.component.scss']
+  styleUrls: ['./inventory-list.component.scss'],
 })
-export class InventoryListComponent implements OnInit, AfterViewInit {
-
-  data: IInventory[] = [
-    {
-      id: "",
-      costPrice: 2356,
-      sellingPrice: 2369,
-      isExpired: true,
-      medicine: {
-        id: "",
-        name: "FAST&UP CHARGE	",
-        category: "Vitamins",
-        description: "FAST&UP CHARGE",
-        type: "Capsule"
-      },
-      batches: [
-        {
-          id: "",
-          batchNo: "rrrr",
-          quantity: 5,
-          expiryDate: new Date(),
-          mfgDate: new Date()
-        },
-        {
-          id: "",
-          batchNo: "rrrr",
-          quantity: 5,
-          expiryDate: new Date(),
-          mfgDate: new Date()
-        }
-      ],
-      stockAvailable: 200
-    },
-    {
-      id: "",
-      costPrice: 34,
-      sellingPrice: 50,
-      isExpired: true,
-      medicine: {
-        id: "",
-        name: "	Trexgen Citron Vitamin C",
-        category: "Vitamins",
-        description: "Trexgen Citron Vitamin C",
-        type: "Capsule"
-      },
-      batches: [
-        {
-          id: "",
-          batchNo: "sss",
-          quantity: 5,
-          expiryDate: new Date(),
-          mfgDate: new Date()
-        }
-      ],
-      stockAvailable: 200
-    }
-  ]
-
-  displayedColumns: string[] = ['name', 'category', 'type', 'price', 'isExpired', 'stockAvailable','batch', 'action'];
+export class InventoryListComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  displayedColumns: string[] = [
+    'name',
+    'category',
+    'type',
+    'price',
+    'isExpired',
+    'stockAvailable',
+    'batch',
+  ];
   dataSource!: MatTableDataSource<IInventory>;
 
   @ViewChild(MatPaginator)
@@ -77,15 +38,38 @@ export class InventoryListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort)
   sort!: MatSort;
+  inventoriesSubscription: Subscription;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(
+    private dialog: MatDialog,
+    private inventoryService: InventoryService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
-    this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => {
+      this.getInventories();
+    }, 0);
+  }
+
+  ngOnDestroy(): void {
+    if (this.inventoriesSubscription)
+      this.inventoriesSubscription.unsubscribe();
+  }
+
+  getInventories() {
+    this.inventoriesSubscription = this.inventoryService
+      .getInventories()
+      .subscribe(
+        (data) => {
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.paginator = this.paginator;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   applyFilter(event: Event) {
@@ -98,12 +82,30 @@ export class InventoryListComponent implements OnInit, AfterViewInit {
   }
 
   addInventory() {
-    this.dialog.open(InventoryAddEditComponent, { width: "35%" })
+    this.dialog
+      .open(InventoryAddEditComponent, { width: '35%' })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.getInventories();
+        }
+      });
   }
 
   editInventory(inventory: IInventory) {
     console.log(inventory);
-    this.dialog.open(InventoryAddEditComponent, { data: inventory, width: "35%" })
+    this.dialog
+      .open(InventoryAddEditComponent, { data: inventory, width: '35%' })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.getInventories();
+        }
+      });
   }
 
+  removeItem(data: IInventory) {
+    this.inventoryService.removeInventory(data.id);
+    this.getInventories();
+  }
 }

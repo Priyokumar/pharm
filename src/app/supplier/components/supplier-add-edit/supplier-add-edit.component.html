@@ -1,6 +1,6 @@
 <section>
   <div class="heading">
-    <h3>Add Supplier</h3>
+    <h3>{{data? 'Update Supplier':'Add Supplier'}}</h3>
   </div>
   <br>
   <div class="container">
@@ -36,7 +36,9 @@
       </mat-radio-group>
     </div>
     <div class="footer">
-      <button mat-raised-button color="primary" (click)="addEdit()">Add Supplier</button>
+      <button mat-raised-button color="primary" (click)="addEdit()" [disabled]="!fg.valid || inProgress">
+        {{data? 'Update Supplier':'Add Supplier'}}
+      </button>
     </div>
   </div>
 </section>

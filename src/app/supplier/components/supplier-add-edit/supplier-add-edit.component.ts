@@ -17,6 +17,7 @@ export class SupplierAddEditComponent implements OnInit {
   contactNo = new FormControl('', null);
   address = new FormControl('', Validators.required);
   isActive = new FormControl('', Validators.required);
+  inProgress = false;
 
   constructor(public dialogRef: MatDialogRef<SupplierAddEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ISupplier, private supplierService: SupplierService) {
@@ -44,15 +45,26 @@ export class SupplierAddEditComponent implements OnInit {
   }
 
   addEdit() {
+    this.inProgress = true;
     const payload: ISupplier = this.fg.value;
+    let pr;
     if (this.data) {
-      payload.id = '' + this.data.id;
-      this.supplierService.updateSupplier(payload, this.data.id);
+      pr = this.supplierService.updateSupplier(payload, this.data.id);
     } else {
-      payload.id = '' + new Date().getTime();
-      this.supplierService.addSupplier(payload);
+      pr = this.supplierService.addSupplier(payload);
     }
-    this.dialogRef.close("ok");
+
+    pr.then((data) => {
+      this.inProgress = false;
+      console.log('Data added', data);
+      this.dialogRef.close(data);
+    })
+    .catch((err) => {
+      this.inProgress = false;
+      console.log(err);
+      this.dialogRef.close("ok");
+    });
+
   }
 
 }

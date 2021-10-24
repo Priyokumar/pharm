@@ -1,44 +1,45 @@
 import { Injectable } from '@angular/core';
+import {
+  AngularFirestore,
+  DocumentReference,
+} from '@angular/fire/compat/firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IMedicine } from 'src/app/model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MedicineService {
+  collection = environment.collection.Medicines;
+  constructor(private firestore: AngularFirestore) {}
 
-constructor() { }
+  getMedicines(): Observable<IMedicine[]> {
+    return this.firestore
+      .collection(this.collection)
+      .snapshotChanges()
+      .pipe(
+        map((data) => {
+          if (!data || data.length <= 0) return [];
+          return data.map((ele) => {
+            const d: IMedicine = ele.payload.doc.data() as any;
+            d.id = ele.payload.doc.id;
+            return d;
+          });
+        })
+      );
+  }
 
-getMedicines():IMedicine[] {
-  const data = localStorage.getItem("medicines");
-  if (!data) return [];
-  return JSON.parse(data);
-}
+  addMedicine(data: IMedicine): Promise<DocumentReference<unknown>> {
+    return this.firestore.collection(this.collection).add(data);
+  }
 
-addMedicine(data: IMedicine):void {
-  const existingData = localStorage.getItem("medicines");
-  if (!existingData) {
-    const d:IMedicine[] = [data];
-    localStorage.setItem("medicines", JSON.stringify(d));
-  };
-  const d:IMedicine[] = JSON.parse(existingData);
-  d.push(data);
-  localStorage.setItem("medicines", JSON.stringify(d));
-}
+  updateMedicine(data: IMedicine, id: string): Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).set(data);
+  }
 
-updateMedicine(data: IMedicine, id: string):void {
-  const existingData = localStorage.getItem("medicines");
-  const d:IMedicine[] = JSON.parse(existingData);
-  const i = d.findIndex(ele=>ele.id === id);
-  d[i] = data;
-  localStorage.setItem("medicines", JSON.stringify(d));
-}
-
-removeMedicine(id: string):void {
-  const existingData = localStorage.getItem("medicines");
-  const d:IMedicine[] = JSON.parse(existingData);
-  const i = d.findIndex(ele=>ele.id === id);
-  d.splice(i,1);
-  localStorage.setItem("medicines", JSON.stringify(d));
-}
-
+  removeMedicine(id: string): Promise<void> {
+    return this.firestore.collection(this.collection).doc(id).delete();
+  }
 }

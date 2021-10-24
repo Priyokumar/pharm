@@ -23,7 +23,7 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button>
+          <button mat-icon-button (click)="remove(row)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

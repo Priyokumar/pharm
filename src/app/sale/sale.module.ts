@@ -5,10 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { SaleAddComponent } from './components/sale-add/sale-add.component';
 import { SaleListComponent } from './components/sale-list/sale-list.component';
+import { LoginGuardService } from '../auth/services/login-guard.service';
 
 const routes: Routes = [
-  { path: "", component: SaleAddComponent },
-  { path: "add", component: SaleListComponent },
+  { path: "", component: SaleAddComponent, canActivate:[LoginGuardService] },
+  { path: "add", component: SaleListComponent, canActivate:[LoginGuardService] },
 ];
 
 @NgModule({

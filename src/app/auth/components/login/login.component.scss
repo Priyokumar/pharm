@@ -1,0 +1,21 @@
+section{
+  height: 60vh;
+  .login-container{
+    background-color: #673ab70f;
+    width: 250px;
+    padding: 3rem;
+    .title{
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      padding-bottom: 20px;
+      span{
+        font-weight: 500;
+      }
+    }
+    .action{
+      margin-top: 2rem;
+    }
+    border-radius: 2px;
+  }
+}

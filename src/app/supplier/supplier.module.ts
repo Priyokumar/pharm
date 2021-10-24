@@ -5,9 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { SupplierAddEditComponent } from './components/supplier-add-edit/supplier-add-edit.component';
+import { LoginGuardService } from '../auth/services/login-guard.service';
 
 const routes: Routes = [
-  { path: "", component: SupplierListComponent }
+  { path: "", component: SupplierListComponent, canActivate:[LoginGuardService] }
 ];
 
 @NgModule({

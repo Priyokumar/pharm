@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { IMedicineType } from '../../../model';
 import { MedicineTypeService } from '../../services/medicine-type.service';
 import { MedicineTypeAddComponent } from '../medicine-type-add/medicine-type-add.component';
@@ -10,13 +11,12 @@ import { MedicineTypeAddComponent } from '../medicine-type-add/medicine-type-add
 @Component({
   selector: '[medicine-type-list]',
   templateUrl: './medicine-type-list.component.html',
-  styleUrls: ['./medicine-type-list.component.scss']
+  styleUrls: ['./medicine-type-list.component.scss'],
 })
-export class MedicineTypeListComponent implements OnInit {
-
+export class MedicineTypeListComponent implements OnInit, OnDestroy {
   data: IMedicineType[] = [];
 
-  displayedColumns: string[] = ['id', 'name', 'action',];
+  displayedColumns: string[] = ['id', 'name', 'action'];
   dataSource!: MatTableDataSource<IMedicineType>;
 
   @ViewChild(MatPaginator)
@@ -24,12 +24,35 @@ export class MedicineTypeListComponent implements OnInit {
 
   @ViewChild(MatSort)
   sort!: MatSort;
+  getSubscription: Subscription;
+  dialogSubscription: Subscription;
 
-  constructor(private dialog: MatDialog, private medicinrTypeService:MedicineTypeService) { }
+  constructor(
+    private dialog: MatDialog,
+    private medicinrTypeService: MedicineTypeService
+  ) {}
 
   ngOnInit() {
-    this.data = this.medicinrTypeService.getMedicineTypes();
-    this.dataSource = new MatTableDataSource(this.data);
+    this.getMedicineTypes();
+  }
+
+  ngOnDestroy(): void {
+    if (this.getSubscription) this.getSubscription.unsubscribe();
+    if (this.dialogSubscription) this.dialogSubscription.unsubscribe();
+  }
+
+  getMedicineTypes() {
+    this.getSubscription = this.medicinrTypeService
+      .getMedicineTypes()
+      .subscribe(
+        (data) => {
+          this.data = data;
+          this.dataSource = new MatTableDataSource(this.data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   applyFilter(event: Event) {
@@ -42,11 +65,21 @@ export class MedicineTypeListComponent implements OnInit {
   }
 
   addCategory() {
-    this.dialog.open(MedicineTypeAddComponent).afterClosed().subscribe(data=>{
-      if(data){
-        this.ngOnInit();
-      }
-    });
+    this.dialogSubscription = this.dialog
+      .open(MedicineTypeAddComponent)
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.ngOnInit();
+        }
+      });
   }
 
+  remove(data: IMedicineType){
+    this.medicinrTypeService.removeMedicineCategory(data.id).then(_=>{
+      this.getMedicineTypes();
+    }).catch(err=>{
+      console.log(err);
+    });
+  }
 }
