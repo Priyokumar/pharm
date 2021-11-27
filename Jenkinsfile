@@ -5,10 +5,10 @@ pipeline {
     }
     environment {
         GO114MODULE = 'on'
-        CGO_ENABLED = 0 
+        CGO_ENABLED = 0
         GOPATH = "${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_ID}"
     }
-    stages {        
+    stages {
         stage('Pre Test') {
             steps {
                 echo 'Installing dependencies'
@@ -16,7 +16,6 @@ pipeline {
                 sh 'go get -u golang.org/x/lint/golint'
             }
         }
-        
-    
-     
+
+    }
 }
