@@ -1,0 +1,70 @@
+<section>
+  <div>
+    <mat-toolbar>
+      <span>New Recieving</span>
+    </mat-toolbar>
+      <div class="form-content">
+        <div class="flex">
+          <mat-form-field appearance="standard" class="pad-right">
+            <mat-label>Supplier</mat-label>
+            <mat-select [formControl]="supplier">
+              <mat-option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                {{supplier.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="standard" class="pad-right">
+            <mat-label>Recieved By</mat-label>
+            <input type="text" matInput placeholder="Ex. John" #input [formControl]="recievedBy">
+          </mat-form-field>
+          <mat-form-field appearance="standard">
+            <mat-label>Recieved Date</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="recievedDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <br>
+        <div class="items">
+          <div class="flex jc-between">
+            <h4>Items</h4>
+            <button mat-raised-button color="primary" (click)="addItem()">Add Item</button>
+          </div>
+          <mat-divider></mat-divider>
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="medicine">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Medicine </th>
+              <td mat-cell *matCellDef="let row"> {{row?.product?.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="batch">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Batch </th>
+              <td mat-cell *matCellDef="let row"> {{row?.batch?.batchNo}} </td>
+            </ng-container>
+            <ng-container matColumnDef="costPrice">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cost Price </th>
+              <td mat-cell *matCellDef="let row"> {{row?.costPrice | currency:"INR"}} </td>
+            </ng-container>
+            <ng-container matColumnDef="sellingPrice">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Selling Price </th>
+              <td mat-cell *matCellDef="let row"> {{row?.sellingPrice | currency:"INR"}} </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+              <td mat-cell *matCellDef="let row; let i = index;">
+                <button mat-icon-button (click)="editItem(row, i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="removeItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <button mat-raised-button color="primary" (click)="save()" class="save" [disabled]="!fg.valid || items.length <= 0 || inProgress">Save Recieving</button>
+      </div>
+      <div></div>
+  </div>
+</section>

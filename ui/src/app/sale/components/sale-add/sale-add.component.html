@@ -1,0 +1,168 @@
+<section>
+  <mat-toolbar class="flex jc-between ``````````````````````````````````````````````````````````````````````````````````````````````````">
+    <h4>Checkout</h4>
+    <button mat-raised-button color="primary" [routerLink]="['/sales/list']">
+      <span>Sales List</span>
+    </button>
+  </mat-toolbar>
+  <div class="container">
+    <div class="flex">
+      <div class="customer-info">
+        <h4 class="title">Customer Info</h4>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Customer Name</mat-label>
+          <input matInput placeholder="Ex. John" #input [formControl]="cName" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Mobile Number</mat-label>
+          <input
+            matInput
+            placeholder="Ex. 984568469"
+            #input
+            [formControl]="cMobileNo"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Address</mat-label>
+          <textarea
+            matInput
+            placeholder="Ex. Awang Leikai"
+            #input
+            [formControl]="cAddress"
+          ></textarea>
+        </mat-form-field>
+      </div>
+      <div class="item-list">
+        <h4 class="title">Items</h4>
+        <div class="item-form flex ai-center w-100">
+          <!-- <mat-form-field appearance="fill" class="w-40">
+            <mat-label>Medicine</mat-label>
+            <mat-select [formControl]="medicine">
+              <mat-option
+                *ngFor="let medicine of medicines"
+                [value]="medicine.id"
+              >
+                {{ medicine.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Batch Number</mat-label>
+            <input
+              matInput
+              placeholder="Ex. FRT34342"
+              #input
+              [formControl]="batchNo"
+              (change)="change($event.target)"
+            />
+          </mat-form-field>
+          <!-- <button
+            mat-raised-button
+            color="accent"
+            class="w-20"
+            [disabled]="!batchNo.valid || !medicine.valid"
+            (click)="addItem()"
+          >
+            <span>Add Item</span>
+          </button> -->
+        </div>
+        <div class="no-data" *ngIf="dataSource?.data?.length <= 0">
+          <div class="title">No items available.</div>
+          <div class="subtitle">
+            Please add items to proceed and make sure customer details are
+            provided.
+          </div>
+        </div>
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="w-100"
+          [ngClass]="{ 'd-none': dataSource?.data?.length <= 0 }"
+        >
+          <ng-container matColumnDef="sl">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              {{ i + 1 }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+          <ng-container matColumnDef="medicine">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.inventory?.product?.name }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="batchNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Batch Number
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.inventory?.batchNo }}</td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              <input [id]="i" type="number" class="w-15" [value]="row.quantity" (change)="quantityChange(i,$event.target)" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.price | currency: "INR" }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="subTotalPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Sub Total Price
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.subTotalPrice | currency: "INR" }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef></td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              <button mat-icon-button (click)="delete(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef>
+              <span class="total-text">Total:</span>&nbsp;&nbsp;<span
+                class="total-amount"
+                >{{ totalAmount | currency: "INR" }}</span
+              >
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data available</td>
+          </tr>
+        </table>
+        <button
+          mat-raised-button
+          color="primary"
+          [routerLink]="['/sales']"
+          class="save-btn w-100"
+          [disabled]="!fg.valid"
+          *ngIf="items.length > 0"
+          (click)="proceedSale()"
+        >
+          <span>Proceed Sale</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

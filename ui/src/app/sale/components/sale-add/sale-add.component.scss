@@ -1,0 +1,81 @@
+.sec-nav{
+  height: 48px;
+}
+
+.container{
+    padding: 0 40px;
+    .customer-info{
+        width: 20%;
+        .title{
+            margin-top: 10px;
+        }
+    }
+    .item-list{
+        padding: 0 40px;
+        width: 80%;
+        .title{
+            margin-top: 10px;
+        }
+        button{
+            height: fit-content;
+        }
+        .mat-form-field{
+            margin: 0 20px;
+        }
+    }
+    .save-btn{
+        margin-top: 2rem;
+        margin-bottom: 4rem;
+    }
+}
+.no-data{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 12vh;
+  .title{
+    font-size: 30px;
+    font-weight: 300;
+    color: rgba(128, 128, 128, 0.452);
+  }
+  .subtitle{
+    font-size: 13px;
+    font-weight: 500;
+    font-style: italic;
+    margin-top: 1.5rem;
+  }
+}
+
+.w-15{
+  width: 15%;
+}
+
+.quantity{
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.mat-column-sl {
+  width: 32px;
+  border-right: 1px solid #00000069;
+  padding-right: 24px;
+}
+
+.mat-column-medicine {
+  padding-left: 16px;
+}
+
+.mat-column-action {
+  text-align: right;
+}
+
+.total-amount{
+  font-weight: 600;
+  font-size: 30px;
+}
+
+.total-text{
+  font-weight: 600;
+  font-size: 20px;
+}

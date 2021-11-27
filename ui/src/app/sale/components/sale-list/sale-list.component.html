@@ -1,0 +1,68 @@
+<section>
+  <div class="heading flex jc-between">
+    <button mat-raised-button color="primary" routerLink="/sales">
+      New Checkout
+    </button>
+    <mat-form-field appearance="standard">
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Ex. Capsule"
+        #input
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort class="w-100">
+      <ng-container matColumnDef="sl">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>SL.No</th>
+        <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="suid">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>SUID</th>
+        <td mat-cell *matCellDef="let row">{{ row.suid }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+        <td mat-cell *matCellDef="let row">{{ row.customer?.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="customerAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+        <td mat-cell *matCellDef="let row">{{ row.customer?.address }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="noOfItems">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header># of Items</th>
+        <td mat-cell *matCellDef="let row">{{ row.items.length }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalPrice">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Price</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.totalAmount | currency: "INR" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="soldDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sold Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.soldDate | date }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data available</td>
+      </tr>
+    </table>
+    <mat-paginator
+      [pageSizeOptions]="[6, 25, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
+  </div>
+</section>
