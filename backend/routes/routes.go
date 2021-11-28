@@ -15,6 +15,12 @@ import (
 func NewEcho() *echo.Echo {
 	log.Println("Setting up routes")
 	e := echo.New()
+
+	e.Static("/", "ui")
+	echo.NotFoundHandler = func(c echo.Context) error {
+		return c.File("ui/index.html")
+	}
+
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
 	v1 := e.Group("v1")
