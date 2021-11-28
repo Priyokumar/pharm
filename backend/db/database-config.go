@@ -19,9 +19,9 @@ func getConfig() *config {
 
 	config := new(config)
 	config.dbHost = "localhost"
-	config.dbUser = "pharm_dev"
-	config.dbPassword = "pharm_dev"
-	config.dbName = "pharm_dev"
+	config.dbUser = "pharm"
+	config.dbPassword = "pharm"
+	config.dbName = "pharm"
 	config.dbPort = "5432"
 
 	return config
