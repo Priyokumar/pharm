@@ -17,7 +17,7 @@ export class SupplierAddEditComponent implements OnInit {
   contactPerson = new FormControl('', null);
   contactNo = new FormControl('', null);
   address = new FormControl('', Validators.required);
-  isActive = new FormControl('', Validators.required);
+  active = new FormControl('', Validators.required);
   inProgress = false;
 
   constructor(public dialogRef: MatDialogRef<SupplierAddEditComponent>,
@@ -27,8 +27,9 @@ export class SupplierAddEditComponent implements OnInit {
       contactPerson: this.contactPerson,
       contactNo: this.contactNo,
       address: this.address,
-      isActive: this.isActive
+      active: this.active
     });
+    this.active.setValue(false);
     if (this.data) {
       this.setForm();
     }
@@ -42,7 +43,7 @@ export class SupplierAddEditComponent implements OnInit {
     this.contactPerson.setValue(this.data.contactPerson);
     this.contactNo.setValue(this.data.contactNo);
     this.address.setValue(this.data.address);
-    this.isActive.setValue(this.data.isActive);
+    this.active.setValue(this.data.active);
   }
 
   addEdit() {

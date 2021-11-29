@@ -34,7 +34,7 @@ export interface ISupplier {
   address: string;
   contactPerson: string;
   contactNo: string;
-  isActive: boolean;
+  active: boolean;
 }
 
 export interface IRecieving {

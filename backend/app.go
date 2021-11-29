@@ -10,6 +10,7 @@ import (
 	"backend/supplier"
 	"log"
 	"net/http"
+	"os"
 )
 
 func init() {
@@ -32,7 +33,13 @@ func init() {
 func main() {
 	log.Println("Starting backend service.")
 	e := routes.NewEcho()
-	if err := e.Start(":8000"); err != http.ErrServerClosed {
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+
+	if err := e.Start(":" + port); err != http.ErrServerClosed {
 		log.Println("Failed to run backend service.")
 		log.Fatal(err)
 	}

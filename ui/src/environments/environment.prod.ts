@@ -18,9 +18,9 @@ export const environment = {
   },
   baseURL: "/v1",
   apiEndpoints: {
-    MedicineTypes: "medicineTypes",
-    MedicineCategories: "medicineCategories",
-    Medicines: "medicines",
+    MedicineTypes: "types",
+    MedicineCategories: "categories",
+    Medicines: "products",
     Suppliers: "suppliers",
     Inventories: "inventories",
     Recievings: "recievings",

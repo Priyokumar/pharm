@@ -46,6 +46,7 @@ export class RecievingAddEditComponent implements OnInit, OnDestroy {
   suppliersubscription: Subscription;
   inProgress = false;
   dialogSubscription: Subscription;
+  today = new Date();
 
   constructor(
     private dialog: MatDialog,

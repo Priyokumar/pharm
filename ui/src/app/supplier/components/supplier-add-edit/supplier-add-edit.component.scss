@@ -1,9 +1,12 @@
 section {
-    button {
-        width: 100%;
-    }
+    
     .footer{
         margin-top: 35px;
+        display: flex;
+        justify-content: space-between;
+        button {
+            width: 49%;
+        }
     }
     .radio-label{
         margin-bottom: 10px;

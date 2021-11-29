@@ -73,7 +73,7 @@ export class SupplierListComponent implements OnInit, OnDestroy {
 
   addSupplier() {
     this.dialog
-      .open(SupplierAddEditComponent, { width: '35%' })
+      .open(SupplierAddEditComponent, { width: '35%', disableClose: true })
       .afterClosed()
       .subscribe((data) => {
         if (data) {
@@ -85,7 +85,11 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   editSupplier(supplier: ISupplier) {
     console.log(supplier);
     this.dialog
-      .open(SupplierAddEditComponent, { data: supplier, width: '35%' })
+      .open(SupplierAddEditComponent, {
+        data: supplier,
+        width: '35%',
+        disableClose: true,
+      })
       .afterClosed()
       .subscribe((data) => {
         if (data) {
@@ -96,7 +100,8 @@ export class SupplierListComponent implements OnInit, OnDestroy {
 
   remove(data: ISupplier) {
     this.supplierService
-      .removeSupplier(data.id).toPromise()
+      .removeSupplier(data.id)
+      .toPromise()
       .then((_) => {
         this.getSuppliers();
       })

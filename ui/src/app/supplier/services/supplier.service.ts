@@ -21,7 +21,7 @@ export class SupplierService {
   }
 
   updateSupplier(id: number, data: ISupplier) {
-    return this.http.post(this.subBaseURL + '/' + id, data);
+    return this.http.put(this.subBaseURL + '/' + id, data);
   }
 
   removeSupplier(id: number) {
