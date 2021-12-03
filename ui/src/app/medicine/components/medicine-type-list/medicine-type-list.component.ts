@@ -16,7 +16,7 @@ import { MedicineTypeAddComponent } from '../medicine-type-add/medicine-type-add
 export class MedicineTypeListComponent implements OnInit, OnDestroy {
   data: IMedicineType[] = [];
 
-  displayedColumns: string[] = ['id', 'name', 'action'];
+  displayedColumns: string[] = ['name', 'action'];
   dataSource!: MatTableDataSource<IMedicineType>;
 
   @ViewChild(MatPaginator)

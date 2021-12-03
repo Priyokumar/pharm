@@ -20,7 +20,7 @@ export const environment = {
     Recievings: "Recievings",
     Suppliers: "Suppliers"
   },
-  baseURL: "http://localhost:8000/v1",
+  baseURL: "/v1",
   apiEndpoints: {
     MedicineTypes: "types",
     MedicineCategories: "categories",
