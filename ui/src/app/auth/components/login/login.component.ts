@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.afAuth
       .signInWithEmailAndPassword(this.email.value, this.password.value)
       .then((data) => {
-        this.router.navigate(['sales/list']);
+        this.router.navigate(['dashboard']);
       })
       .catch((error) => {
         console.log(error);

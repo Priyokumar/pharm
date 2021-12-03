@@ -1,0 +1,33 @@
+main {
+  margin: 0 20px;
+  .timeline {
+    div {
+      padding: 15px;
+      width: 50%;
+      margin: 10px 15px;
+      height: 21vh;
+      /* box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09);
+      -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09);
+      -moz-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09); */
+    }
+  }
+  .numbers {
+    margin-top: 50px;
+    div {
+      border-radius: 5px;
+      padding: 15px;
+      width: 33.33%;
+      margin: 10px 10px;
+      height: 30vh;
+      box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09);
+      -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09);
+      -moz-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.09);
+      background: rgb(14, 209, 171);
+      background: linear-gradient(
+        180deg,
+        rgba(14, 209, 171, 0.05646008403361347) 35%,
+        rgba(14, 209, 171, 0.020045518207282953) 100%
+      );
+    }
+  }
+}
